@@ -6,6 +6,8 @@ import { ThemeProvider } from "styled-components/native";
 
 import theme from "./src/theme";
 
+import { SignIn } from "@screens/SignIn";
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     DMSans_400Regular,
@@ -16,5 +18,9 @@ export default function App() {
     return <AppLoading />;
   }
 
-  return <ThemeProvider theme={theme}></ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <SignIn />
+    </ThemeProvider>
+  );
 }
