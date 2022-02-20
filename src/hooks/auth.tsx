@@ -1,4 +1,10 @@
-import React, { createContext, useContext, ReactNode, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import { Alert } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
@@ -12,6 +18,8 @@ type User = {
 
 type AuthContextData = {
   signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
   isLogging: boolean;
   user: User | null;
 };
@@ -77,8 +85,54 @@ function AuthProvider({ children }: AuthProviderProps) {
       .finally(() => setIsLogging(false));
   }
 
+  async function loadUserStorageData() {
+    setIsLogging(true);
+
+    const storedUser = await AsyncStorage.getItem(USER_COLLECTION);
+
+    if (storedUser) {
+      const userData = JSON.parse(storedUser) as User;
+      setUser(userData);
+    }
+
+    setIsLogging(false);
+  }
+
+  async function signOut() {
+    await auth().signOut();
+    await AsyncStorage.removeItem(USER_COLLECTION);
+    setUser(null);
+  }
+
+  async function forgotPassword(email: string) {
+    if (!email) {
+      return Alert.alert("Redefinir senha", "Informe o e-mail.");
+    }
+
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() =>
+        Alert.alert(
+          "Redefinir senha",
+          "Enviamos um link para seu e-mail para redefinir senha."
+        )
+      )
+      .catch(() =>
+        Alert.alert(
+          "Redefinir senha",
+          "Não foi possível enviar o e-mail para redefinir senha."
+        )
+      );
+  }
+
+  useEffect(() => {
+    loadUserStorageData();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ signIn, isLogging, user }}>
+    <AuthContext.Provider
+      value={{ signIn, isLogging, user, signOut, forgotPassword }}
+    >
       {children}
     </AuthContext.Provider>
   );
