@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { ButtonBack } from "@components/ButtonBack";
+import { Photo } from "@components/Photo";
 
 import { Container, Header, Title, DeleteLabel } from "./styles";
 
@@ -16,6 +17,7 @@ export function Product() {
           <DeleteLabel>Deletar</DeleteLabel>
         </TouchableOpacity>
       </Header>
+      <Photo uri="" />
     </Container>
   );
 }
