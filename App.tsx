@@ -9,6 +9,7 @@ import { AuthProvider } from "./src/hooks/auth";
 import theme from "./src/theme";
 
 import { SignIn } from "@screens/SignIn";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,10 +23,12 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <StatusBar style="light" translucent backgroundColor="transparent" />
-      <AuthProvider>
-        <SignIn />
-      </AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
