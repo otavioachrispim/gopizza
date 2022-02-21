@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Platform, TouchableOpacity, ScrollView, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
+
 import { ButtonBack } from "@components/ButtonBack";
 import { Photo } from "@components/Photo";
 import { InputPrice } from "@components/InputPrice";
@@ -65,6 +68,33 @@ export function Product() {
         "Informe o preço de todos os tamanhos da pizza."
       );
     }
+
+    setIsLoading(true);
+
+    // salvando a imagem no storage do firebase - fazendo upload
+    const fileName = new Date().getTime();
+    const reference = storage().ref(`/pizzas/${fileName}.png`);
+    // retornando a imagem do storage do firebase no meu estado image
+    await reference.putFile(image);
+    // retornando o link da imagem
+    const photo_url = await reference.getDownloadURL();
+
+    firestore()
+      .collection("pizzas")
+      .add({
+        name,
+        name_insensitive: name.toLowerCase().trim(),
+        description,
+        prices_sizes: { p: priceSizeP, m: priceSizeM, g: priceSizeG },
+        photo_url,
+        photo_path: reference.fullPath,
+      })
+      .then(() => Alert.alert("Cadastro", "Pizza cadastrada com sucesso."))
+      .catch(() =>
+        Alert.alert("Cadastro", "Não foi possível cadastrar a pizza.")
+      );
+
+    setIsLoading(false);
   }
 
   return (
@@ -100,10 +130,14 @@ export function Product() {
               <MaxCharacters>0 de 60 caracteres</MaxCharacters>
             </InputGroupHeader>
 
-            <Input onChangeText={setDescription} value={description} />
+            <Input
+              multiline
+              maxLength={60}
+              style={{ height: 80 }}
+              onChangeText={setDescription}
+              value={description}
+            />
           </InputGroup>
-
-          <Input multiline maxLength={60} style={{ height: 80 }} />
 
           <InputGroup>
             <Label>Tamanhos e preços</Label>
