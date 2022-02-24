@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Alert, TouchableOpacity } from "react-native";
 import { useTheme } from "styled-components/native";
 import { Search } from "@components/Search";
 import { ProductCard, ProductProps } from "@components/ProductCard";
 import firestore from "@react-native-firebase/firestore";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import {
   Container,
@@ -15,12 +16,14 @@ import {
   MenuHeader,
   MenuItensNumber,
   Title,
+  NewProductButton,
 } from "./styles";
 import happyEmoji from "@assets/happy.png";
 import { FlatList } from "react-native-gesture-handler";
 
 export function Home() {
   const { COLORS } = useTheme();
+  const navigation = useNavigation();
   const [pizzas, setPizzas] = useState<ProductProps[]>([]);
   const [search, setSearch] = useState("");
 
@@ -57,9 +60,19 @@ export function Home() {
     fetchPizzas("");
   }
 
-  useEffect(() => {
-    fetchPizzas("");
-  }, []);
+  function handleOpen(id: string) {
+    navigation.navigate("product", { id });
+  }
+
+  function handleAdd() {
+    navigation.navigate("product", {});
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPizzas("");
+    }, [])
+  );
 
   return (
     <Container>
@@ -80,19 +93,27 @@ export function Home() {
       />
       <MenuHeader>
         <Title>Cardápio</Title>
-        <MenuItensNumber>10 pizzas</MenuItensNumber>
+        <MenuItensNumber>{pizzas.length} pizzas</MenuItensNumber>
       </MenuHeader>
 
       <FlatList
         data={pizzas}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProductCard data={item} />}
+        renderItem={({ item }) => (
+          <ProductCard data={item} onPress={() => handleOpen(item.id)} />
+        )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingTop: 20,
           paddingBottom: 125,
           marginHorizontal: 24,
         }}
+      />
+
+      <NewProductButton
+        title="Cadastrar Pizza"
+        type="secondary"
+        onPress={handleAdd}
       />
     </Container>
   );
