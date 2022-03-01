@@ -2,7 +2,7 @@ import { ButtonBack } from "@src/components/ButtonBack";
 import React from "react";
 import { Platform } from "react-native";
 
-import { Container, Header } from "./styles";
+import { Container, Header, Photo } from "./styles";
 
 export function Order() {
   return (
@@ -10,6 +10,7 @@ export function Order() {
       <Header>
         <ButtonBack onPress={() => {}} style={{ marginBottom: 108 }} />
       </Header>
+      <Photo source={{ uri: "http://github.com/otaviochrispim.png" }} />
     </Container>
   );
 }
