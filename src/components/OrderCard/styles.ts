@@ -22,8 +22,8 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
 `;
 
 export const Image = styled.Image`
-  height: 140px;
-  width: 140px;
+  height: 104px;
+  width: 104px;
   border-radius: 52px;
 `;
 

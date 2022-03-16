@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Platform } from "react-native";
-import { ButtonBack } from "@src/components/ButtonBack";
-import { RadioButton } from "@src/components/RadioButton";
+import { ButtonBack } from "@components/ButtonBack";
+import { RadioButton } from "@components/RadioButton";
 import { PIZZA_TYPES } from "@utils/pizzaTypes";
 
 import {
@@ -17,8 +17,8 @@ import {
   Price,
   ContentScroll,
 } from "./styles";
-import { Input } from "@src/components/Input";
-import { Button } from "@src/components/Button";
+import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 export function Order() {
   const [size, setSize] = useState("");
@@ -30,7 +30,7 @@ export function Order() {
           <ButtonBack onPress={() => {}} style={{ marginBottom: 108 }} />
         </Header>
 
-        <Photo source={{ uri: "http://github.com/otaviochrispim.png" }} />
+        <Photo source={{ uri: "http://github.com/otavioachrispim.png" }} />
 
         <Form>
           <Title>Nome da pizza</Title>
